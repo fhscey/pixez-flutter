@@ -1,4 +1,4 @@
-name: Build Windows
+nname: Build Windows
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     name: Build Windows
-    runs-on: windows-latest
+    runs-on: windows-11-arm
     steps:
       - name: 签出仓库
         uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
         with:
           channel: stable
           cache: true
-          architecture: x64
+          architecture: arm64
 
       - name: 初始化 Rust 工具链
         uses: actions-rust-lang/setup-rust-toolchain@v1.10.1
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: binary
-          path: build/windows/x64/runner/Release/**/*
+          path: build/windows/arm64/runner/Release/**/*
           compression-level: 9
 
       - name: 还原证书
@@ -94,7 +94,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: msix
-          path: build/windows/x64/runner/Release/pixez.msix
+          path: build/windows/arm64/runner/Release/pixez.msix
           compression-level: 9
 
       - name: 生成 MSIX 安装器
@@ -102,7 +102,7 @@ jobs:
         if: steps.msix.conclusion == 'success'
         uses: frg2089/MsixInstaller@v2
         with:
-          msix: build/windows/x64/runner/Release/pixez.msix
+          msix: build/windows/arm64/runner/Release/pixez.msix
 
       - name: 上传 MSIX 安装器
         id: installer-artifact
